@@ -3,619 +3,688 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Policy Index Rubric: Evaluation Template with Auto-Calculation</title>
+    <title>Policy Index Calculator</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            max-width: 1000px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            line-height: 1.4;
-            background-color: #f9f9f9;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
         }
+        
         .container {
-            background-color: white;
+            background: white;
             padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
+        
         h1 {
             color: #2c3e50;
             text-align: center;
             margin-bottom: 30px;
+            font-size: 2.2em;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        h2 {
+            color: #34495e;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 8px;
+            margin-top: 30px;
+            font-size: 1.4em;
+        }
+        
+        h3 {
+            color: #2980b9;
+            margin-top: 25px;
+            font-size: 1.2em;
+        }
+        
+        .formula-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .formula {
             font-size: 24px;
-        }
-        .header-section {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 6px;
-            margin-bottom: 25px;
-        }
-        .header-field {
-            margin-bottom: 15px;
-        }
-        .header-field label {
             font-weight: bold;
-            display: inline-block;
-            width: 150px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
         }
-        .header-field input {
-            border: none;
-            border-bottom: 2px solid #333;
-            background: transparent;
-            padding: 5px;
-            font-size: 14px;
-            width: 300px;
-        }
-        .instructions {
-            background-color: #e8f4fd;
+        
+        .formula-explanation {
+            background: rgba(255,255,255,0.1);
             padding: 15px;
-            border-left: 4px solid #3498db;
-            margin-bottom: 25px;
-            font-style: italic;
+            border-radius: 8px;
+            margin: 10px 0;
+            text-align: left;
         }
-        .calculation-panel {
-            background-color: #e8f5e8;
+        
+        .category-section {
+            background: #f8f9fa;
             padding: 20px;
-            border-radius: 6px;
-            margin-bottom: 25px;
-            border-left: 4px solid #27ae60;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 5px solid #3498db;
         }
-        .calculation-panel h3 {
-            color: #2c3e50;
-            margin-top: 0;
+        
+        .calculation-row {
+            display: grid;
+            grid-template-columns: 3fr 100px 50px 100px 120px;
+            gap: 15px;
+            align-items: center;
+            margin: 10px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        .calc-row {
-            display: flex;
-            justify-content: space-between;
+        
+        .section-total-row {
+            display: grid;
+            grid-template-columns: 3fr 100px 120px;
+            gap: 15px;
+            align-items: center;
+            margin: 10px 0;
+            padding: 15px;
+            background: #e8f4f8;
+            border-radius: 8px;
+            border: 2px solid #3498db;
+            font-weight: bold;
+        }
+        
+        .parameters-section {
+            background: #ecf0f1;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            border: 2px solid #34495e;
+        }
+        
+        .parameter-row {
+            display: grid;
+            grid-template-columns: 2fr 150px 80px;
+            gap: 15px;
             align-items: center;
             margin: 10px 0;
             padding: 10px;
-            background-color: white;
-            border-radius: 4px;
+            background: white;
+            border-radius: 6px;
         }
-        .calc-label {
-            font-weight: bold;
-            flex: 1;
-        }
-        .calc-input {
-            width: 80px;
-            padding: 5px;
-            text-align: center;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .calc-result {
-            font-weight: bold;
-            margin-left: 10px;
-            min-width: 100px;
-            text-align: center;
-        }
-        .performance-badge {
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-left: 10px;
-        }
-        .level-1 { background-color: #f8d7da; color: #721c24; }
-        .level-2 { background-color: #fff3cd; color: #856404; }
-        .level-3 { background-color: #d1ecf1; color: #0c5460; }
-        .level-4 { background-color: #d4edda; color: #155724; }
         
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 25px;
-            font-size: 12px;
+        .final-calculation {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
         }
-        th {
-            background-color: #34495e;
+        
+        .pi-result {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        input[type="number"] {
+            padding: 8px 12px;
+            border: 2px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="number"]:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+        }
+        
+        select {
+            padding: 8px 12px;
+            border: 2px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+        }
+        
+        .percentage {
+            font-weight: bold;
+            font-size: 16px;
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
             color: white;
-            padding: 12px 8px;
+            background: #95a5a6;
+            min-width: 80px;
+        }
+        
+        .level-1 { background: #e74c3c; }
+        .level-2 { background: #f39c12; }
+        .level-3 { background: #f1c40f; color: #2c3e50; }
+        .level-4 { background: #27ae60; }
+        
+        .color-code-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        
+        .color-indicators {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .color-card {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
             text-align: center;
-            font-weight: bold;
-            border: 1px solid #2c3e50;
+            border: 2px solid transparent;
         }
-        td {
-            border: 1px solid #ddd;
-            padding: 10px 8px;
-            vertical-align: top;
+        
+        .color-card.active {
+            border-color: #f1c40f;
+            background: rgba(255,255,255,0.2);
         }
-        .policy-name {
-            font-weight: bold;
-            background-color: #f8f9fa;
-            width: 200px;
+        
+        .color-badge {
+            width: 60px;
+            height: 30px;
+            border-radius: 15px;
+            margin: 10px auto;
+            border: 2px solid white;
         }
-        .checkbox-cell {
-            text-align: center;
-            width: 80px;
-        }
-        .checkbox-cell input[type="checkbox"] {
-            transform: scale(1.2);
-            margin: 2px;
-        }
-        .notes-cell {
-            width: 150px;
-        }
-        .notes-cell textarea {
+        
+        .golden { background: linear-gradient(45deg, #FFD700, #FFA500); }
+        .silver { background: linear-gradient(45deg, #C0C0C0, #808080); }
+        .green { background: linear-gradient(45deg, #32CD32, #228B22); }
+        .blue { background: linear-gradient(45deg, #4169E1, #0000CD); }
+        .no-color { background: linear-gradient(45deg, #696969, #2F4F4F); }
+        
+        textarea {
             width: 100%;
-            height: 60px;
-            border: 1px solid #ddd;
-            padding: 5px;
-            resize: vertical;
-            font-size: 11px;
-        }
-        .risks-cell {
-            width: 150px;
-        }
-        .risks-cell textarea {
-            width: 100%;
-            height: 60px;
-            border: 1px solid #ddd;
-            padding: 5px;
-            resize: vertical;
-            font-size: 11px;
-        }
-        .definitions {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 6px;
-            margin: 25px 0;
-        }
-        .definitions h3 {
-            color: #2c3e50;
-            margin-top: 0;
-        }
-        .definitions ul {
-            padding-left: 20px;
-        }
-        .definitions li {
-            margin-bottom: 10px;
-        }
-        .summary-section {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 6px;
-            margin-top: 25px;
-        }
-        .summary-section h3 {
-            color: #2c3e50;
-            margin-top: 0;
-        }
-        .summary-field {
-            margin-bottom: 20px;
-        }
-        .summary-field label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 5px;
-        }
-        .summary-field textarea {
-            width: 100%;
-            min-height: 80px;
-            border: 1px solid #ddd;
             padding: 10px;
-            border-radius: 4px;
+            border: 2px solid #bdc3c7;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
             resize: vertical;
+            min-height: 60px;
         }
+        
         .print-button {
-            background-color: #3498db;
+            background: linear-gradient(45deg, #3498db, #2980b9);
             color: white;
-            padding: 12px 24px;
+            padding: 12px 30px;
             border: none;
-            border-radius: 6px;
-            cursor: pointer;
+            border-radius: 8px;
             font-size: 16px;
-            margin: 20px 10px 0 0;
+            cursor: pointer;
+            margin: 20px auto;
+            display: block;
+            transition: all 0.3s ease;
         }
+        
         .print-button:hover {
-            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
         }
-        .save-button {
-            background-color: #27ae60;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            margin: 20px 10px 0 0;
-        }
-        .save-button:hover {
-            background-color: #219a52;
-        }
+        
         @media print {
-            body {
-                background-color: white;
-                padding: 0;
-            }
-            .container {
-                box-shadow: none;
-                padding: 0;
-            }
-            .print-button, .save-button {
-                display: none;
-            }
+            body { background: white; }
+            .container { box-shadow: none; }
+            .print-button { display: none; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📄 Policy Index Rubric: Evaluation Template with Auto-Calculation</h1>
+        <h1>📊 Policy Index Calculator</h1>
         
-        <div class="header-section">
-            <div class="header-field">
-                <label>Library Name:</label>
-                <input type="text" id="libraryName" placeholder="Enter library name">
-            </div>
-            <div class="header-field">
-                <label>Review Date:</label>
-                <input type="date" id="reviewDate">
-            </div>
-            <div class="header-field">
-                <label>Reviewer Name:</label>
-                <input type="text" id="reviewerName" placeholder="Enter reviewer name">
+        <div class="formula-section">
+            <h2 style="color: white; border: none; margin-top: 0;">Policy Index Formula</h2>
+            <div class="formula">Pi = (ccn × hr) / (a × k) × (1/t)</div>
+            <div class="formula-explanation">
+                <strong>Where:</strong><br>
+                • ccn = Cumulative checkbox number (total policies implemented)<br>
+                • hr = Human resource index (%)<br>
+                • a = Library age (years)<br>
+                • k = Consistency block time (5 years)<br>
+                • t = Time taken to perform policy procedures
             </div>
         </div>
-
-        <div class="instructions">
-            <strong>Instructions:</strong> For each policy domain listed below, enter the number of implemented policies out of the maximum possible. The system will automatically calculate percentages and assign performance levels based on the rubric criteria.
+        
+        <h2>📋 Step 1: Individual Category Calculations</h2>
+        
+        <div class="category-section">
+            <h3>PIR - Policy Implementation Resources</h3>
+            
+            <div class="calculation-row">
+                <label>Information Resources Collection & Development:</label>
+                <input type="number" id="irc_score" placeholder="0" min="0" max="20" onchange="calculatePercentage('irc', 20)">
+                <span>/20</span>
+                <div id="irc_percentage" class="percentage">0%</div>
+                <select id="irc_level" onchange="updateColor('irc')">
+                    <option value="">Select Level</option>
+                    <option value="1">Level 1</option>
+                    <option value="2">Level 2</option>
+                    <option value="3">Level 3</option>
+                    <option value="4">Level 4</option>
+                </select>
+            </div>
+            
+            <div class="calculation-row">
+                <label>Information Resources Management & Optimization:</label>
+                <input type="number" id="irm_score" placeholder="0" min="0" max="7" onchange="calculatePercentage('irm', 7)">
+                <span>/7</span>
+                <div id="irm_percentage" class="percentage">0%</div>
+                <select id="irm_level" onchange="updateColor('irm')">
+                    <option value="">Select Level</option>
+                    <option value="1">Level 1</option>
+                    <option value="2">Level 2</option>
+                    <option value="3">Level 3</option>
+                    <option value="4">Level 4</option>
+                </select>
+            </div>
+            
+            <div class="calculation-row">
+                <label>Information Resource Sharing:</label>
+                <input type="number" id="irs_score" placeholder="0" min="0" max="5" onchange="calculatePercentage('irs', 5)">
+                <span>/5</span>
+                <div id="irs_percentage" class="percentage">0%</div>
+                <select id="irs_level" onchange="updateColor('irs')">
+                    <option value="">Select Level</option>
+                    <option value="1">Level 1</option>
+                    <option value="2">Level 2</option>
+                    <option value="3">Level 3</option>
+                    <option value="4">Level 4</option>
+                </select>
+            </div>
+            
+            <div class="section-total-row">
+                <label><strong>PIR Total:</strong></label>
+                <div id="pir_total">0/32</div>
+                <div id="pir_percentage" class="percentage">0%</div>
+            </div>
         </div>
-
-        <div class="calculation-panel">
-            <h3>📊 Policy Implementation Calculator</h3>
-            <p><strong>Enter the number of implemented policies for each domain:</strong></p>
+        
+        <div class="category-section">
+            <h3>PLPS - Personnel & Library Professional Services</h3>
             
-            <div class="calc-row">
-                <div class="calc-label">1. Information Resources Collection & Development (Max: 20)</div>
-                <input type="number" class="calc-input" id="policy1" min="0" max="20" value="0" onchange="calculateScore(1, 20)">
-                <div class="calc-result" id="result1">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge1">Minimal</div>
+            <div class="calculation-row">
+                <label>Recruitment and Promotion:</label>
+                <input type="number" id="rp_score" placeholder="0" min="0" max="9" onchange="calculatePercentage('rp', 9)">
+                <span>/9</span>
+                <div id="rp_percentage" class="percentage">0%</div>
+                <select id="rp_level" onchange="updateColor('rp')">
+                    <option value="">Select Level</option>
+                    <option value="1">Level 1</option>
+                    <option value="2">Level 2</option>
+                    <option value="3">Level 3</option>
+                    <option value="4">Level 4</option>
+                </select>
             </div>
             
-            <div class="calc-row">
-                <div class="calc-label">2. Information Resources Management & Optimization (Max: 7)</div>
-                <input type="number" class="calc-input" id="policy2" min="0" max="7" value="0" onchange="calculateScore(2, 7)">
-                <div class="calc-result" id="result2">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge2">Minimal</div>
+            <div class="calculation-row">
+                <label>Staff Development & Skill Enhancement:</label>
+                <input type="number" id="sd_score" placeholder="0" min="0" max="11" onchange="calculatePercentage('sd', 11)">
+                <span>/11</span>
+                <div id="sd_percentage" class="percentage">0%</div>
+                <select id="sd_level" onchange="updateColor('sd')">
+                    <option value="">Select Level</option>
+                    <option value="1">Level 1</option>
+                    <option value="2">Level 2</option>
+                    <option value="3">Level 3</option>
+                    <option value="4">Level 4</option>
+                </select>
             </div>
             
-            <div class="calc-row">
-                <div class="calc-label">3. Information Resource Sharing (Max: 5)</div>
-                <input type="number" class="calc-input" id="policy3" min="0" max="5" value="0" onchange="calculateScore(3, 5)">
-                <div class="calc-result" id="result3">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge3">Minimal</div>
+            <div class="section-total-row">
+                <label><strong>PLPS Total:</strong></label>
+                <div id="plps_total">0/20</div>
+                <div id="plps_percentage" class="percentage">0%</div>
+            </div>
+        </div>
+        
+        <div class="category-section">
+            <h3>PUS - Policy User Services</h3>
+            
+            <div class="calculation-row">
+                <label>Traditional Library Services:</label>
+                <input type="number" id="tls_score" placeholder="0" min="0" max="10" onchange="calculatePercentage('tls', 10)">
+                <span>/10</span>
+                <div id="tls_percentage" class="percentage">0%</div>
+                <select id="tls_level" onchange="updateColor('tls')">
+                    <option value="">Select Level</option>
+                    <option value="1">Level 1</option>
+                    <option value="2">Level 2</option>
+                    <option value="3">Level 3</option>
+                    <option value="4">Level 4</option>
+                </select>
             </div>
             
-            <div class="calc-row">
-                <div class="calc-label">4. Recruitment and Promotion (Max: 9)</div>
-                <input type="number" class="calc-input" id="policy4" min="0" max="9" value="0" onchange="calculateScore(4, 9)">
-                <div class="calc-result" id="result4">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge4">Minimal</div>
+            <div class="section-total-row">
+                <label><strong>PUS Total:</strong></label>
+                <div id="pus_total">0/10</div>
+                <div id="pus_percentage" class="percentage">0%</div>
+            </div>
+        </div>
+        
+        <div class="category-section">
+            <h3>Additional Sections</h3>
+            
+            <div class="calculation-row">
+                <label>PLS (Policy Library Space):</label>
+                <input type="number" id="pls_score" placeholder="0" min="0" max="21" onchange="calculatePercentage('pls', 21)">
+                <span>/21</span>
+                <div id="pls_percentage" class="percentage">0%</div>
+                <select id="pls_level" onchange="updateColor('pls')">
+                    <option value="">Select Level</option>
+                    <option value="1">Level 1</option>
+                    <option value="2">Level 2</option>
+                    <option value="3">Level 3</option>
+                    <option value="4">Level 4</option>
+                </select>
             </div>
             
-            <div class="calc-row">
-                <div class="calc-label">5. Staff Development & Skill Enhancement (Max: 11)</div>
-                <input type="number" class="calc-input" id="policy5" min="0" max="11" value="0" onchange="calculateScore(5, 11)">
-                <div class="calc-result" id="result5">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge5">Minimal</div>
+            <div class="calculation-row">
+                <label>HEPL (High-End Policy Level):</label>
+                <input type="number" id="hepl_score" placeholder="0" min="0" max="25" onchange="calculatePercentage('hepl', 25)">
+                <span>/25</span>
+                <div id="hepl_percentage" class="percentage">0%</div>
+                <select id="hepl_level" onchange="updateColor('hepl')">
+                    <option value="">Select Level</option>
+                    <option value="1">Level 1</option>
+                    <option value="2">Level 2</option>
+                    <option value="3">Level 3</option>
+                    <option value="4">Level 4</option>
+                </select>
+            </div>
+        </div>
+        
+        <h2>🧮 Step 2: Policy Index Parameters</h2>
+        
+        <div class="parameters-section">
+            <h3>Formula Parameters</h3>
+            
+            <div class="parameter-row">
+                <label><strong>CCN (Cumulative Checkbox Number):</strong></label>
+                <div id="ccn_display" style="font-weight: bold; font-size: 18px; color: #2980b9;">0</div>
+                <span>policies</span>
             </div>
             
-            <div class="calc-row">
-                <div class="calc-label">6. Traditional Library Services (Max: 10)</div>
-                <input type="number" class="calc-input" id="policy6" min="0" max="10" value="0" onchange="calculateScore(6, 10)">
-                <div class="calc-result" id="result6">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge6">Minimal</div>
+            <div class="parameter-row">
+                <label><strong>HR (Human Resource Index %):</strong><br>
+                <small>Required Staff Capacity / Total Staff Capacity × 100</small></label>
+                <input type="number" id="hr_index" placeholder="0" min="0" max="200" step="0.1" onchange="calculatePolicyIndex()">
+                <span>%</span>
             </div>
             
-            <div class="calc-row">
-                <div class="calc-label">7. Literature Review Service (Max: 8)</div>
-                <input type="number" class="calc-input" id="policy7" min="0" max="8" value="0" onchange="calculateScore(7, 8)">
-                <div class="calc-result" id="result7">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge7">Minimal</div>
+            <div class="parameter-row">
+                <label><strong>Library Age (a):</strong></label>
+                <input type="number" id="library_age" placeholder="0" min="1" max="200" onchange="calculatePolicyIndex()">
+                <span>years</span>
             </div>
             
-            <div class="calc-row">
-                <div class="calc-label">8. Ethical & Fair Use of Information Resources (Max: 6)</div>
-                <input type="number" class="calc-input" id="policy8" min="0" max="6" value="0" onchange="calculateScore(8, 6)">
-                <div class="calc-result" id="result8">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge8">Minimal</div>
+            <div class="parameter-row">
+                <label><strong>Time (t) for policy procedures:</strong></label>
+                <input type="number" id="time_taken" placeholder="0" min="0.1" step="0.1" onchange="calculatePolicyIndex()">
+                <select id="time_unit" onchange="calculatePolicyIndex()">
+                    <option value="hours">Hours</option>
+                    <option value="days">Days</option>
+                    <option value="weeks">Weeks</option>
+                    <option value="months">Months</option>
+                    <option value="years">Years</option>
+                </select>
             </div>
             
-            <div class="calc-row">
-                <div class="calc-label">9. Ask a Librarian Service (Max: 12)</div>
-                <input type="number" class="calc-input" id="policy9" min="0" max="12" value="0" onchange="calculateScore(9, 12)">
-                <div class="calc-result" id="result9">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge9">Minimal</div>
+            <div class="parameter-row">
+                <label><strong>Consistency Block Time (k):</strong></label>
+                <div style="font-weight: bold; color: #2980b9;">5</div>
+                <span>years (fixed)</span>
             </div>
-            
-            <div class="calc-row">
-                <div class="calc-label">10. Information Literacy (Max: 15)</div>
-                <input type="number" class="calc-input" id="policy10" min="0" max="15" value="0" onchange="calculateScore(10, 15)">
-                <div class="calc-result" id="result10">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge10">Minimal</div>
+        </div>
+        
+        <div class="final-calculation">
+            <h2 style="margin-top: 0;">📈 Policy Index Calculation</h2>
+            <div class="formula">Pi = (CCN × HR) / (A × K) × (1/T)</div>
+            <div class="pi-result" id="pi_result">Pi = 0.00</div>
+            <div style="margin-top: 15px;">
+                <strong>Color Code Percentage:</strong> <span id="ccp_result" style="font-size: 20px; font-weight: bold; color: #2c3e50;">0.00%</span>
             </div>
-            
-            <div class="calc-row">
-                <div class="calc-label">11. Research Writing Support & Faculty Program Services (Max: 18)</div>
-                <input type="number" class="calc-input" id="policy11" min="0" max="18" value="0" onchange="calculateScore(11, 18)">
-                <div class="calc-result" id="result11">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge11">Minimal</div>
-            </div>
-            
-            <div class="calc-row">
-                <div class="calc-label">12. Scholarship Portal Services (Max: 14)</div>
-                <input type="number" class="calc-input" id="policy12" min="0" max="14" value="0" onchange="calculateScore(12, 14)">
-                <div class="calc-result" id="result12">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge12">Minimal</div>
-            </div>
-            
-            <div class="calc-row">
-                <div class="calc-label">13. Research Visibility (Max: 16)</div>
-                <input type="number" class="calc-input" id="policy13" min="0" max="16" value="0" onchange="calculateScore(13, 16)">
-                <div class="calc-result" id="result13">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge13">Minimal</div>
-            </div>
-            
-            <div class="calc-row">
-                <div class="calc-label">14. Cloud Services (Max: 13)</div>
-                <input type="number" class="calc-input" id="policy14" min="0" max="13" value="0" onchange="calculateScore(14, 13)">
-                <div class="calc-result" id="result14">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge14">Minimal</div>
-            </div>
-            
-            <div class="calc-row">
-                <div class="calc-label">15. Tools & Equipment Services (Max: 11)</div>
-                <input type="number" class="calc-input" id="policy15" min="0" max="11" value="0" onchange="calculateScore(15, 11)">
-                <div class="calc-result" id="result15">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge15">Minimal</div>
-            </div>
-            
-            <div class="calc-row">
-                <div class="calc-label">16. Information Analytical Services (Max: 19)</div>
-                <input type="number" class="calc-input" id="policy16" min="0" max="19" value="0" onchange="calculateScore(16, 19)">
-                <div class="calc-result" id="result16">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge16">Minimal</div>
-            </div>
-            
-            <div class="calc-row">
-                <div class="calc-label">17. Community Engagement & Outreach (Max: 17)</div>
-                <input type="number" class="calc-input" id="policy17" min="0" max="17" value="0" onchange="calculateScore(17, 17)">
-                <div class="calc-result" id="result17">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge17">Minimal</div>
-            </div>
-            
-            <div class="calc-row">
-                <div class="calc-label">18. User Evaluation Service (Max: 9)</div>
-                <input type="number" class="calc-input" id="policy18" min="0" max="9" value="0" onchange="calculateScore(18, 9)">
-                <div class="calc-result" id="result18">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge18">Minimal</div>
-            </div>
-            
-            <div class="calc-row">
-                <div class="calc-label">19. User Publication Service (Max: 12)</div>
-                <input type="number" class="calc-input" id="policy19" min="0" max="12" value="0" onchange="calculateScore(19, 12)">
-                <div class="calc-result" id="result19">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge19">Minimal</div>
-            </div>
-            
-            <div class="calc-row">
-                <div class="calc-label">20. Green Library Initiatives (Max: 22)</div>
-                <input type="number" class="calc-input" id="policy20" min="0" max="22" value="0" onchange="calculateScore(20, 22)">
-                <div class="calc-result" id="result20">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge20">Minimal</div>
-            </div>
-            
-            <div class="calc-row">
-                <div class="calc-label">21. Space for Information Resource Collection (Max: 8)</div>
-                <input type="number" class="calc-input" id="policy21" min="0" max="8" value="0" onchange="calculateScore(21, 8)">
-                <div class="calc-result" id="result21">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge21">Minimal</div>
-            </div>
-            
-            <div class="calc-row">
-                <div class="calc-label">22. Space for Users (Design & Convenience) (Max: 13)</div>
-                <input type="number" class="calc-input" id="policy22" min="0" max="13" value="0" onchange="calculateScore(22, 13)">
-                <div class="calc-result" id="result22">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge22">Minimal</div>
-            </div>
-            
-            <div class="calc-row">
-                <div class="calc-label">23. Disaster Management (Max: 7)</div>
-                <input type="number" class="calc-input" id="policy23" min="0" max="7" value="0" onchange="calculateScore(23, 7)">
-                <div class="calc-result" id="result23">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge23">Minimal</div>
-            </div>
-            
-            <div class="calc-row">
-                <div class="calc-label">24. Advocacy (Max: 10)</div>
-                <input type="number" class="calc-input" id="policy24" min="0" max="10" value="0" onchange="calculateScore(24, 10)">
-                <div class="calc-result" id="result24">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge24">Minimal</div>
-            </div>
-            
-            <div class="calc-row">
-                <div class="calc-label">25. Higher Education Policy in Library (Max: 15)</div>
-                <input type="number" class="calc-input" id="policy25" min="0" max="15" value="0" onchange="calculateScore(25, 15)">
-                <div class="calc-result" id="result25">0% - Level 1</div>
-                <div class="performance-badge level-1" id="badge25">Minimal</div>
-            </div>
-            
-            <div style="margin-top: 30px; padding: 20px; background-color: #fff; border: 2px solid #27ae60; border-radius: 8px;">
-                <h4 style="color: #27ae60; margin-top: 0;">📈 Overall Summary</h4>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
-                    <strong>Total Policies Implemented:</strong>
-                    <span id="totalImplemented" style="font-size: 18px; font-weight: bold; color: #27ae60;">0</span>
+        </div>
+        
+        <div class="color-code-section">
+            <h2 style="color: white; border: none; margin-top: 0;">🏆 Library Color Code (LCC) System</h2>
+            <div class="color-indicators">
+                <div class="color-card" id="golden-card">
+                    <div class="color-badge golden"></div>
+                    <strong>Golden</strong><br>
+                    75-100%<br>
+                    <small>Excellent Implementation</small>
                 </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
-                    <strong>Total Possible Policies:</strong>
-                    <span id="totalPossible" style="font-size: 18px; font-weight: bold;">315</span>
+                <div class="color-card" id="silver-card">
+                    <div class="color-badge silver"></div>
+                    <strong>Silver</strong><br>
+                    50-74%<br>
+                    <small>Good Implementation</small>
                 </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
-                    <strong>Overall Percentage:</strong>
-                    <span id="overallPercentage" style="font-size: 20px; font-weight: bold; color: #e74c3c;">0%</span>
+                <div class="color-card" id="green-card">
+                    <div class="color-badge green"></div>
+                    <strong>Green</strong><br>
+                    26-49%<br>
+                    <small>Moderate Implementation</small>
                 </div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin: 15px 0;">
-                    <strong>Overall Performance Level:</strong>
-                    <div class="performance-badge level-1" id="overallBadge">Level 1: Minimal Implementation</div>
+                <div class="color-card" id="blue-card">
+                    <div class="color-badge blue"></div>
+                    <strong>Blue</strong><br>
+                    1-25%<br>
+                    <small>Basic Implementation</small>
+                </div>
+                <div class="color-card" id="no-color-card">
+                    <div class="color-badge no-color"></div>
+                    <strong>No Color</strong><br>
+                    0%<br>
+                    <small>No Policy Document</small>
                 </div>
             </div>
+            <div id="current_color_code" style="text-align: center; font-size: 24px; font-weight: bold; margin-top: 20px;">
+                Current Color Code: <span id="color_code_name">Not Calculated</span>
+            </div>
         </div>
-
-        <div class="definitions">
-            <h3>Policy Index Rubrics</h3>
-            <p>Each policy group/category is evaluated using this 4-level rubric, linked to both <strong>scores</strong> and <strong>color codes</strong> from the Policy Index system.</p>
+        
+        <div class="parameters-section">
+            <h3>📝 Assessment Summary & Remarks</h3>
             
-            <table style="margin: 20px 0; font-size: 14px;">
-                <thead>
-                    <tr>
-                        <th style="width: 120px;">Level</th>
-                        <th style="width: 100px;">Score Range (% of Max)</th>
-                        <th style="width: 100px;">Color Code</th>
-                        <th style="width: 200px;">Performance Description</th>
-                        <th>Expectations</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="font-weight: bold;">Level 1: Minimal</td>
-                        <td style="text-align: center;">0–30%</td>
-                        <td style="text-align: center;">❌ Red</td>
-                        <td><strong>Minimal implementation.</strong> Very few policies are in place. Likely in early development or unaware of best practices.</td>
-                        <td>Identify gaps. Initiate policy drafting. Seek guidance from higher-performing libraries.</td>
-                    </tr>
-                    <tr>
-                        <td style="font-weight: bold;">Level 2: Moderate</td>
-                        <td style="text-align: center;">31–49%</td>
-                        <td style="text-align: center;">🟧 Orange</td>
-                        <td><strong>Partial implementation.</strong> Some policy efforts exist but lack consistency or depth.</td>
-                        <td>Formalize more policies. Standardize processes. Focus on staff awareness and documentation.</td>
-                    </tr>
-                    <tr>
-                        <td style="font-weight: bold;">Level 3: Substantial</td>
-                        <td style="text-align: center;">50–79%</td>
-                        <td style="text-align: center;">🔵 Blue</td>
-                        <td><strong>Substantial implementation.</strong> Most core policies are active and documented. Some areas may still need work.</td>
-                        <td>Conduct regular reviews. Start measuring impact. Engage users and staff in feedback.</td>
-                    </tr>
-                    <tr>
-                        <td style="font-weight: bold;">Level 4: Advanced</td>
-                        <td style="text-align: center;">80–100%</td>
-                        <td style="text-align: center;">🟢 Green</td>
-                        <td><strong>Comprehensive implementation.</strong> All critical policies are active, monitored, and aligned with institutional goals.</td>
-                        <td>Maintain quality. Benchmark with national standards. Innovate and share best practices.</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="summary-section">
-            <h3>Summary and Recommendations:</h3>
-            <div class="summary-field">
-                <label>Overall Assessment:</label>
-                <textarea id="overallAssessment" placeholder="Based on the evaluations above, provide a summary of the library's policy implementation status."></textarea>
+            <div style="margin-top: 20px;">
+                <label><strong>HR Index Calculation Helper:</strong></label>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 10px 0;">
+                    <div>
+                        <label>Required Staff Capacity:</label>
+                        <input type="number" id="required_staff" placeholder="0" min="0" onchange="calculateHRIndex()">
+                    </div>
+                    <div>
+                        <label>Total Staff Capacity:</label>
+                        <input type="number" id="total_staff" placeholder="0" min="1" onchange="calculateHRIndex()">
+                    </div>
+                </div>
             </div>
-            <div class="summary-field">
-                <label>Key Strengths:</label>
-                <textarea id="keyStrengths" placeholder="Highlight domains where the library excels."></textarea>
+            
+            <div style="margin-top: 20px;">
+                <label><strong>Narrative Remarks:</strong></label>
+                <textarea id="remarks" placeholder="Enter assessment observations, strengths, and areas for improvement..."></textarea>
             </div>
-            <div class="summary-field">
-                <label>Areas for Improvement:</label>
-                <textarea id="areasImprovement" placeholder="Identify domains requiring attention and suggest specific actions."></textarea>
+            
+            <div style="margin-top: 20px;">
+                <label><strong>Priority Areas for Improvement:</strong></label>
+                <textarea id="priorities" placeholder="List key areas requiring immediate attention..."></textarea>
             </div>
         </div>
-
-        <button class="print-button" onclick="downloadPDF()">📥 Download PDF</button>
-        <button class="save-button" onclick="saveForm()">💾 Save as HTML</button>
+        
+        <button class="print-button" onclick="window.print()">🖨️ Print/Save as PDF</button>
     </div>
-
+    
     <script>
-        function calculateScore(policyNum, maxPolicies) {
-            const implementedPolicies = parseInt(document.getElementById(`policy${policyNum}`).value) || 0;
-            const percentage = Math.round((implementedPolicies / maxPolicies) * 100);
+        function calculatePercentage(category, maxValue) {
+            const scoreInput = document.getElementById(category + '_score');
+            const percentageDiv = document.getElementById(category + '_percentage');
+            const levelSelect = document.getElementById(category + '_level');
             
-            let level, levelText, badgeClass;
+            const score = parseInt(scoreInput.value) || 0;
+            const percentage = Math.round((score / maxValue) * 100);
             
-            if (percentage >= 80) {
-                level = 4;
-                levelText = "Advanced";
-                badgeClass = "level-4";
-            } else if (percentage >= 50) {
-                level = 3;
-                levelText = "Substantial";
-                badgeClass = "level-3";
-            } else if (percentage >= 31) {
-                level = 2;
-                levelText = "Moderate";
-                badgeClass = "level-2";
-            } else {
-                level = 1;
-                levelText = "Minimal";
-                badgeClass = "level-1";
-            }
+            percentageDiv.textContent = percentage + '%';
             
-            document.getElementById(`result${policyNum}`).textContent = `${percentage}% - Level ${level}`;
-            const badge = document.getElementById(`badge${policyNum}`);
-            badge.textContent = levelText;
-            badge.className = `performance-badge ${badgeClass}`;
+            // Auto-assign level based on percentage
+            let level = '';
+            if (percentage >= 80) level = '4';
+            else if (percentage >= 50) level = '3';
+            else if (percentage >= 31) level = '2';
+            else level = '1';
             
-            updateOverallSummary();
+            levelSelect.value = level;
+            updateColor(category);
+            
+            // Update section totals and CCN
+            updateSectionTotals();
+            updateCCN();
+            calculatePolicyIndex();
         }
         
-        function updateOverallSummary() {
-            const maxValues = [20, 7, 5, 9, 11, 10, 8, 6, 12, 15, 18, 14, 16, 13, 11, 19, 17, 9, 12, 22, 8, 13, 7, 10, 15];
-            let totalImplemented = 0;
-            let totalPossible = 0;
+        function updateColor(category) {
+            const percentageDiv = document.getElementById(category + '_percentage');
+            const levelSelect = document.getElementById(category + '_level');
+            const level = levelSelect.value;
             
-            for (let i = 1; i <= 25; i++) {
-                const implemented = parseInt(document.getElementById(`policy${i}`).value) || 0;
-                totalImplemented += implemented;
-                totalPossible += maxValues[i-1];
+            percentageDiv.className = 'percentage';
+            if (level) {
+                percentageDiv.classList.add('level-' + level);
             }
-            
-            const overallPercentage = Math.round((totalImplemented / totalPossible) * 100);
-            
-            let overallLevel, overallLevelText, overallBadgeClass;
-            
-            if (overallPercentage >= 80) {
-                overallLevel = 4;
-                overallLevelText = "Level 4: Advanced Implementation";
-                overallBadgeClass = "level-4";
-            } else if (overallPercentage >= 50) {
-                overallLevel = 3;
-                overallLevelText = "Level 3: Substantial Implementation";
-                overallBadgeClass = "level-3";
-            } else if (overallPercentage >= 31) {
-                overallLevel = 2;
-                overallLevelText = "Level 2: Moderate Implementation";
-                overallBadgeClass = "level-2";
-            } else {
-                overallLevel = 1;
-                overallLevelText = "Level 1: Minimal Implementation";
-                overallBadgeClass = "level-1";
-            }
-            
-            document.getElementById('totalImplemented').textContent = totalImplemented;
-            document.getElementById('totalPossible').textContent = totalPossible;
-            document.getElementById('overallPercentage').textContent = `${overallPercentage}%`;
-            
-            const overallBadge = document.getElementById('overallBadge');
-            overallBadge.textContent = overallLevelText;
-            overallBadge.className = `performance-badge ${overallBadgeClass}`;
-            
-            // Auto-generate summary text based on performance
-            updateAutoSummary(overallPercentage, overallLevel);
         }
         
-        function updateAutoSummary(percentage, level) {
-            const libraryName = document.getElementById('libraryName').value || "This library";
+        function updateSectionTotals() {
+            // PIR Total
+            const ircScore = parseInt(document.getElementById('irc_score').value) || 0;
+            const irmScore = parseInt(document.getElementById('irm_score').value) || 0;
+            const irsScore = parseInt(document.getElementById('irs_score').value) || 0;
+            const pirTotal = ircScore + irmScore + irsScore;
+            const pirPercentage = Math.round((pirTotal / 32) * 100);
             
-            let assessmentText = "";
-            let strengthsText = "";
-            let improvementText = "";
+            document.getElementById('pir_total').textContent = pirTotal + '/32';
+            const pirPercentageDiv = document.getElementById('pir_percentage');
+            pirPercentageDiv.textContent = pirPercentage + '%';
+            pirPercentageDiv.className = 'percentage';
+            if (pirPercentage >= 80) pirPercentageDiv.classList.add('level-4');
+            else if (pirPercentage >= 50) pirPercentageDiv.classList.add('level-3');
+            else if (pirPercentage >= 31) pirPercentageDiv.classList.add('level-2');
+            else pirPercentageDiv.classList.add('level-1');
             
-            switch(level) {
-                case 4:
-                    assessmentText = `${libraryName} demonstrates exceptional policy implementation with ${percentage}% of policies in place. The library shows comprehensive coverage across all domains and serves as a model for best practices in library policy management.`;
-                    strengthsText = "
+            // PLPS Total
+            const rpScore = parseInt(document.getElementById('rp_score').value) || 0;
+            const sdScore = parseInt(document.getElementById('sd_score').value) || 0;
+            const plpsTotal = rpScore + sdScore;
+            const plpsPercentage = Math.round((plpsTotal / 20) * 100);
+            
+            document.getElementById('plps_total').textContent = plpsTotal + '/20';
+            const plpsPercentageDiv = document.getElementById('plps_percentage');
+            plpsPercentageDiv.textContent = plpsPercentage + '%';
+            plpsPercentageDiv.className = 'percentage';
+            if (plpsPercentage >= 80) plpsPercentageDiv.classList.add('level-4');
+            else if (plpsPercentage >= 50) plpsPercentageDiv.classList.add('level-3');
+            else if (plpsPercentage >= 31) plpsPercentageDiv.classList.add('level-2');
+            else plpsPercentageDiv.classList.add('level-1');
+            
+            // PUS Total
+            const tlsScore = parseInt(document.getElementById('tls_score').value) || 0;
+            const pusTotal = tlsScore;
+            const pusPercentage = Math.round((pusTotal / 10) * 100);
+            
+            document.getElementById('pus_total').textContent = pusTotal + '/10';
+            const pusPercentageDiv = document.getElementById('pus_percentage');
+            pusPercentageDiv.textContent = pusPercentage + '%';
+            pusPercentageDiv.className = 'percentage';
+            if (pusPercentage >= 80) pusPercentageDiv.classList.add('level-4');
+            else if (pusPercentage >= 50) pusPercentageDiv.classList.add('level-3');
+            else if (pusPercentage >= 31) pusPercentageDiv.classList.add('level-2');
+            else pusPercentageDiv.classList.add('level-1');
+        }
+        
+        function updateCCN() {
+            const ircScore = parseInt(document.getElementById('irc_score').value) || 0;
+            const irmScore = parseInt(document.getElementById('irm_score').value) || 0;
+            const irsScore = parseInt(document.getElementById('irs_score').value) || 0;
+            const rpScore = parseInt(document.getElementById('rp_score').value) || 0;
+            const sdScore = parseInt(document.getElementById('sd_score').value) || 0;
+            const tlsScore = parseInt(document.getElementById('tls_score').value) || 0;
+            const plsScore = parseInt(document.getElementById('pls_score').value) || 0;
+            const heplScore = parseInt(document.getElementById('hepl_score').value) || 0;
+            
+            const ccn = ircScore + irmScore + irsScore + rpScore + sdScore + tlsScore + plsScore + heplScore;
+            document.getElementById('ccn_display').textContent = ccn;
+        }
+        
+        function calculateHRIndex() {
+            const requiredStaff = parseFloat(document.getElementById('required_staff').value) || 0;
+            const totalStaff = parseFloat(document.getElementById('total_staff').value) || 1;
+            
+            const hrIndex = (requiredStaff / totalStaff) * 100;
+            document.getElementById('hr_index').value = hrIndex.toFixed(1);
+            
+            calculatePolicyIndex();
+        }
+        
+        function calculatePolicyIndex() {
+            const ccn = parseInt(document.getElementById('ccn_display').textContent) || 0;
+            const hr = parseFloat(document.getElementById('hr_index').value) || 0;
+            const age = parseFloat(document.getElementById('library_age').value) || 1;
+            const time = parseFloat(document.getElementById('time_taken').value) || 1;
+            const k = 5; // Consistency block time (fixed)
+            
+            // Convert time to standard unit if needed
+            const timeUnit = document.getElementById('time_unit').value;
+            let timeInHours = time;
+            
+            switch(timeUnit) {
+                case 'days': timeInHours = time * 24; break;
+                case 'weeks': timeInHours = time * 168; break;
+                case 'months': timeInHours = time * 720; break;
+                case 'years': timeInHours = time * 8760; break;
+            }
+            
+            // Calculate Policy Index: Pi = (ccn × hr) / (a × k) × (1/t)
+            const pi = (ccn * hr) / (age * k) * (1 / timeInHours);
+            
+            document.getElementById('pi_result').textContent = 'Pi = ' + pi.toFixed(2);
+            
+            // Calculate Color Code Percentage (assuming total policy procedures = 350 as mentioned in document)
+            const totalPolicyProcedures = 350;
+            const ccp = (pi / totalPolicyProcedures) * 100;
+            
+            document.getElementById('ccp_result').textContent = ccp.toFixed(2) + '%';
+            
+            // Determine and display color code
+            updateColorCode(ccp);
+        }
+        
+        function updateColorCode(percentage) {
+            // Remove active class from all cards
+            document.querySelectorAll('.color-card').forEach(
