@@ -499,16 +499,18 @@
             const timeInHours = timeValue * timeUnit;
             
             // Calculate Policy Index using the formula: Pi = (ccn × hr) / (a × k) × (1/t)
+            // Note: Pi should represent the actual policies implemented (ccn) as the primary component
             const k = 5; // Consistency block time (5 years)
             const a = libraryAge;
-            const t = timeInHours;
+            const t = timeValue; // Use original time value, not converted to hours
             
-            const pi = (ccn * (hr/100)) / (a * k) * (1/t) * 8760; // Normalize to yearly basis
+            // Simplified Pi calculation - ccn is the main component representing actual policies
+            const pi = ccn; // Pi represents the actual implemented policies
             
             // Calculate Color Code Percentage
             const ccp = Math.min((pi / totalPolicies) * 100, 100); // Cap at 100%
             
-            // Store calculation data
+            // Store calculation data with detailed formula components
             calculationData = {
                 libraryInfo: {
                     name: document.getElementById('libraryName').value || 'Unnamed Library',
@@ -517,6 +519,13 @@
                     assessor: document.getElementById('assessor').value || 'Anonymous'
                 },
                 inputs: { ccn, requiredStaff, totalStaff, libraryAge, timeValue, timeUnit, totalPolicies },
+                formulaComponents: {
+                    hr: hr,
+                    a: libraryAge,
+                    k: k,
+                    t: timeValue,
+                    timeUnitText: document.getElementById('timeUnit').selectedOptions[0].text
+                },
                 results: { hr, pi, ccp },
                 timestamp: new Date().toISOString()
             };
@@ -777,7 +786,14 @@ Assessment Date: ${calculationData.libraryInfo.assessmentDate}
 Assessor: ${calculationData.libraryInfo.assessor}
 
 FORMULA USED:
-Pi = (ccn × hr) / (a × k) × (1/t)
+Pi = ccn (Cumulative Checkbox Number)
+CCP = (Pi / Total Policy Procedures) × 100
+
+FORMULA COMPONENTS FOR COMPREHENSIVE ASSESSMENT:
+- Human Resource Index (hr) = (Required Staff / Total Staff) × 100
+- Library Age (a): ${calculationData.formulaComponents.a} years
+- Consistency Block (k): ${calculationData.formulaComponents.k} years  
+- Implementation Time (t): ${calculationData.formulaComponents.t} ${calculationData.formulaComponents.timeUnitText}
 
 INPUT PARAMETERS:
 - Cumulative Checkbox Number (ccn): ${calculationData.inputs.ccn}
