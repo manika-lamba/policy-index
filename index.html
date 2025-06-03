@@ -590,4 +590,305 @@
                 hrStatusText = "Significantly Understaffed";
                 hrStatusColor = "#e74c3c";
             } else if (hr > 100) {
-                hr
+                hrStatusText = "Understaffed";
+                hrStatusColor = "#f39c12";
+            } else if (hr >= 90) {
+                hrStatusText = "Optimal Staffing";
+                hrStatusColor = "#27ae60";
+            } else {
+                hrStatusText = "Potentially Overstaffed";
+                hrStatusColor = "#3498db";
+            }
+            document.getElementById('hrStatus').innerHTML = `<span style="color: ${hrStatusColor};">${hrStatusText}</span>`;
+            
+            // Update Pi result
+            document.getElementById('piValue').textContent = pi.toFixed(4);
+            
+            // Update CCP result
+            document.getElementById('ccpValue').textContent = `${ccp.toFixed(2)}%`;
+            
+            // Update progress bar
+            const progressFill = document.getElementById('progressFill');
+            progressFill.style.width = `${Math.min(ccp, 100)}%`;
+            progressFill.textContent = `${ccp.toFixed(1)}%`;
+            
+            // Update color badge
+            const colorBadge = document.getElementById('colorBadge');
+            colorBadge.textContent = colorData.code;
+            colorBadge.style.backgroundColor = colorData.bgColor;
+            colorBadge.style.color = colorData.textColor;
+            
+            document.getElementById('colorDescription').textContent = colorData.description;
+        }
+
+        function updateBenchmarkAnalysis(ccp, hr, pi) {
+            // Overall assessment
+            let assessment = "";
+            if (ccp >= 75) {
+                assessment = "Exceptional Performance: Your library demonstrates exemplary policy implementation that exceeds industry standards.";
+            } else if (ccp >= 50) {
+                assessment = "Strong Performance: Your library shows solid policy implementation with room for strategic improvements.";
+            } else if (ccp >= 26) {
+                assessment = "Developing Performance: Your library has foundational policies in place but requires systematic enhancement.";
+            } else if (ccp >= 1) {
+                assessment = "Emerging Performance: Your library is in early stages of policy development and needs comprehensive improvement.";
+            } else {
+                assessment = "Critical Status: Immediate action required to establish basic policy framework.";
+            }
+            
+            document.getElementById('overallAssessment').textContent = assessment;
+            
+            // Staffing analysis
+            let staffingAnalysis = "";
+            if (hr > 110) {
+                staffingAnalysis = `Staffing Critical Issue: With HR Index of ${hr.toFixed(1)}%, your library is significantly understaffed, which severely impacts policy implementation capacity.`;
+            } else if (hr > 100) {
+                staffingAnalysis = `Staffing Concern: HR Index of ${hr.toFixed(1)}% indicates understaffing, which may limit policy implementation effectiveness.`;
+            } else if (hr >= 90) {
+                staffingAnalysis = `Optimal Staffing: HR Index of ${hr.toFixed(1)}% indicates well-balanced staffing levels supporting effective policy implementation.`;
+            } else {
+                staffingAnalysis = `Staffing Surplus: HR Index of ${hr.toFixed(1)}% suggests potential for optimizing staff allocation or expanding policy scope.`;
+            }
+            
+            document.getElementById('staffingAnalysis').textContent = staffingAnalysis;
+            
+            // Recommendations
+            let recommendations = "Strategic Recommendations: ";
+            if (ccp >= 75) {
+                recommendations += "Focus on innovation and sharing best practices. Consider mentoring other libraries and leading policy development initiatives.";
+            } else if (ccp >= 50) {
+                recommendations += "Optimize existing policies through impact measurement and stakeholder feedback. Prepare advancement strategy for Golden level.";
+            } else if (ccp >= 26) {
+                recommendations += "Prioritize staff training, process standardization, and comprehensive policy documentation development.";
+            } else {
+                recommendations += "Establish fundamental policy framework, seek external guidance, and focus on basic governance structures.";
+            }
+            
+            document.getElementById('recommendations').textContent = recommendations;
+            
+            // Update benchmark table
+            updateBenchmarkTable(ccp);
+        }
+
+        function updateBenchmarkTable(ccp) {
+            const benchmarks = [
+                { id: 'university', range: [60, 85], type: 'Research Universities' },
+                { id: 'public', range: [40, 65], type: 'Public Libraries' },
+                { id: 'college', range: [45, 70], type: 'Academic Colleges' },
+                { id: 'special', range: [35, 60], type: 'Special Libraries' }
+            ];
+            
+            benchmarks.forEach(benchmark => {
+                const gapElement = document.getElementById(`${benchmark.id}Gap`);
+                const analysisElement = document.getElementById(`${benchmark.id}Analysis`);
+                
+                let status, analysis, color;
+                if (ccp >= benchmark.range[1]) {
+                    status = "Exceeds";
+                    analysis = "Above benchmark";
+                    color = "#27ae60";
+                } else if (ccp >= benchmark.range[0]) {
+                    status = "Meets";
+                    analysis = "Within range";
+                    color = "#3498db";
+                } else {
+                    const gap = benchmark.range[0] - ccp;
+                    status = "Below";
+                    analysis = `${gap.toFixed(1)}% gap`;
+                    color = "#e74c3c";
+                }
+                
+                gapElement.innerHTML = `<span style="color: ${color}; font-weight: 600;">${status}</span>`;
+                analysisElement.innerHTML = `<span style="color: ${color};">${analysis}</span>`;
+            });
+        }
+
+        function exportToPDF() {
+            window.print();
+        }
+
+        function exportToExcel() {
+            const data = [
+                ['Library Performance Assessment Report'],
+                [''],
+                ['Library Information'],
+                ['Library Name', calculationData.libraryInfo.name],
+                ['Institution', calculationData.libraryInfo.institution],
+                ['Assessment Date', calculationData.libraryInfo.assessmentDate],
+                ['Assessor', calculationData.libraryInfo.assessor],
+                [''],
+                ['Input Parameters'],
+                ['Cumulative Checkbox Number (ccn)', calculationData.inputs.ccn],
+                ['Required Staff Capacity', calculationData.inputs.requiredStaff],
+                ['Total Staff Capacity', calculationData.inputs.totalStaff],
+                ['Library Age (years)', calculationData.inputs.libraryAge],
+                ['Implementation Time', `${calculationData.inputs.timeValue} ${document.getElementById('timeUnit').selectedOptions[0].text.toLowerCase()}`],
+                ['Total Policy Procedures', calculationData.inputs.totalPolicies],
+                [''],
+                ['Calculation Results'],
+                ['Human Resource Index (HR)', `${calculationData.results.hr.toFixed(2)}%`],
+                ['Policy Index (Pi)', calculationData.results.pi.toFixed(4)],
+                ['Color Code Percentage (CCP)', `${calculationData.results.ccp.toFixed(2)}%`],
+                ['Library Color Code', getColorCode(calculationData.results.ccp).code],
+                ['Library Ranking', getColorCode(calculationData.results.ccp).ranking],
+                [''],
+                ['Generated on', new Date().toLocaleString()]
+            ];
+            
+            let csvContent = data.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+            
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Policy_Index_Assessment_${calculationData.libraryInfo.name.replace(/\s+/g, '_')}_${calculationData.libraryInfo.assessmentDate}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function exportToJSON() {
+            const exportData = {
+                ...calculationData,
+                colorCode: getColorCode(calculationData.results.ccp),
+                formula: "Pi = (ccn × hr) / (a × k) × (1/t)",
+                version: "1.0"
+            };
+            
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Policy_Index_Data_${calculationData.libraryInfo.name.replace(/\s+/g, '_')}_${calculationData.libraryInfo.assessmentDate}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function saveCalculation() {
+            const reportContent = `
+POLICY INDEX CALCULATION REPORT
+========================================
+Library: ${calculationData.libraryInfo.name}
+Institution: ${calculationData.libraryInfo.institution}
+Assessment Date: ${calculationData.libraryInfo.assessmentDate}
+Assessor: ${calculationData.libraryInfo.assessor}
+
+FORMULA USED:
+Pi = (ccn × hr) / (a × k) × (1/t)
+
+INPUT PARAMETERS:
+- Cumulative Checkbox Number (ccn): ${calculationData.inputs.ccn}
+- Required Staff Capacity: ${calculationData.inputs.requiredStaff}
+- Total Staff Capacity: ${calculationData.inputs.totalStaff}
+- Human Resource Index (hr): ${calculationData.results.hr.toFixed(2)}%
+- Library Age (a): ${calculationData.inputs.libraryAge} years
+- Implementation Time (t): ${calculationData.inputs.timeValue} ${document.getElementById('timeUnit').selectedOptions[0].text.toLowerCase()}
+- Consistency Block (k): 5 years
+- Total Policy Procedures: ${calculationData.inputs.totalPolicies}
+
+CALCULATION RESULTS:
+- Human Resource Index (HR): ${calculationData.results.hr.toFixed(2)}%
+- Policy Index (Pi): ${calculationData.results.pi.toFixed(4)}
+- Color Code Percentage (CCP): ${calculationData.results.ccp.toFixed(2)}%
+- Library Color Code: ${getColorCode(calculationData.results.ccp).code}
+- Library Ranking: ${getColorCode(calculationData.results.ccp).ranking}
+
+PERFORMANCE ANALYSIS:
+${document.getElementById('overallAssessment').textContent}
+
+STAFFING ANALYSIS:
+${document.getElementById('staffingAnalysis').textContent}
+
+RECOMMENDATIONS:
+${document.getElementById('recommendations').textContent}
+
+Generated on: ${new Date().toLocaleString()}
+========================================
+`;
+            
+            const blob = new Blob([reportContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Policy_Index_Report_${calculationData.libraryInfo.name.replace(/\s+/g, '_')}_${calculationData.libraryInfo.assessmentDate}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Auto-update calculations when inputs change
+        ['ccn', 'requiredStaff', 'totalStaff', 'libraryAge', 'timeValue', 'timeUnit', 'totalPolicies'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('input', function() {
+                    if (document.getElementById('resultsSection').style.display === 'block') {
+                        setTimeout(calculatePolicyIndex, 500); // Debounce for better UX
+                    }
+                });
+            }
+        });
+
+        // Set default date to today
+        document.getElementById('assessmentDate').value = new Date().toISOString().split('T')[0];
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'Enter':
+                        e.preventDefault();
+                        calculatePolicyIndex();
+                        break;
+                    case 's':
+                        e.preventDefault();
+                        if (document.getElementById('exportSection').style.display !== 'none') {
+                            saveCalculation();
+                        }
+                        break;
+                    case 'p':
+                        e.preventDefault();
+                        if (document.getElementById('exportSection').style.display !== 'none') {
+                            exportToPDF();
+                        }
+                        break;
+                }
+            }
+        });
+
+        // Input validation and formatting
+        document.querySelectorAll('input[type="number"]').forEach(input => {
+            input.addEventListener('blur', function() {
+                if (this.value && parseFloat(this.value) < 0) {
+                    this.value = 0;
+                }
+            });
+        });
+
+        // Tooltip functionality for better UX
+        function addTooltips() {
+            const tooltips = {
+                'ccn': 'The total number of policy procedures your library has successfully implemented across all domains.',
+                'requiredStaff': 'The optimal number of staff members needed for your library to operate efficiently.',
+                'totalStaff': 'The current number of staff members employed by your library.',
+                'libraryAge': 'The number of years since your library was established or began operations.',
+                'timeValue': 'The time period it took to implement your current set of policies.',
+                'totalPolicies': 'The maximum number of policies possible for your library type (standard is 350).'
+            };
+            
+            Object.keys(tooltips).forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.title = tooltips[id];
+                }
+            });
+        }
+
+        // Initialize tooltips
+        addTooltips();
+    </script>
+</body>
+</html>
